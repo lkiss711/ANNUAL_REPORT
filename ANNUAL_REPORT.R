@@ -184,7 +184,7 @@ leaflet() %>%
 
 data_all_CDD_wide_spread_ts <- spread(dplyr::filter(data_all_CDD,nchar(as.character(geo)) == 4, grepl(paste(validcountries,collapse = '|'),geo)),geo,values)
 data_all_HDD_wide_spread_ts <- spread(dplyr::filter(data_all_HDD,nchar(as.character(geo)) == 4, grepl(paste(validcountries,collapse = '|'),geo)),geo,values)
-
+View(data_all_HDD_wide_spread_ts)
 
 # View(data_all_HDD_wide_spread_ts)
 
@@ -210,13 +210,13 @@ for(i in 3:length(colnames(data_all_HDD_wide_spread_ts))){
   y <- gsub(" ", "", y, fixed = TRUE)
   temp_decomp <- decompose(ts_temp)
   assign(y,temp_decomp)
-  decomp.plot(temp_decomp,main = paste("Decomposition of",x))
+  decomp.plot(temp_decomp,main = paste("Decomposition of HU_Észak-Alföld"))
   x <- paste("deseasonal_",colnames(data_all_HDD_wide_spread_ts)[i])
   x <- gsub(" ", "", x, fixed = TRUE)
   deseasonal_temp <- seasadj(temp_decomp)
   assign(x,deseasonal_temp)
   fit<-auto.arima(deseasonal_temp, seasonal=FALSE)
-  # tsdisplay(residuals(fit), lag.max=36, main=paste('Model Residuals for ',x))
+  tsdisplay(residuals(fit), lag.max=36, main=paste('Model Residuals for HU_Észak-Alföld'))
   ts_list[[i]] = ts_temp
   frame_list[[i]] = frame_temp
 
@@ -224,8 +224,9 @@ for(i in 3:length(colnames(data_all_HDD_wide_spread_ts))){
 
 ###########################
 
-y <- ts(data_all_HDD_wide_spread_ts[,3:26],
-        start =c(1974,1), end = c(2017,12), frequency = 12)
+# y <- ts(data_all_HDD_wide_spread_ts[,3:26],
+#         start =c(1974,1), end = c(2017,12), frequency = 12)
+y <- ts_temp
 
 parameters <- list()
 parameters_diff <- list()
@@ -247,6 +248,7 @@ for(i in 1:ncol(y)){
   parameters_diff[[i]] <- AuModel_diff$arma
   
 }
+
 
 df_parameters <- as.data.frame(matrix(unlist(parameters),nrow=24,byrow = T))
 df_parameters_diff <- as.data.frame(matrix(unlist(parameters_diff),nrow=24,byrow = T))
