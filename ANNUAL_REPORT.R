@@ -243,12 +243,20 @@ for(i in 1:ncol(y)){
                              max.P=3, max.Q=3, max.order=8, max.d=2, max.D=1, 
                              start.p=1, start.q=1, start.P=1, start.Q=1)
   
-  
+  View(AuModel)
   parameters[[i]] <- AuModel$arma
   parameters_diff[[i]] <- AuModel_diff$arma
   
 }
 
+auto.arima(y)
+
+temp_decomp <- decompose(y)
+deseasonal_y <- seasadj(temp_decomp)
+
+
+fcast <- forecast(deseasonal_y,h=30)
+plot(fcast)
 
 df_parameters <- as.data.frame(matrix(unlist(parameters),nrow=24,byrow = T))
 df_parameters_diff <- as.data.frame(matrix(unlist(parameters_diff),nrow=24,byrow = T))
